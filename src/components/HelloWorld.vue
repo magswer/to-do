@@ -1,19 +1,30 @@
 <script>
+// import AddNewTaskModal from '../modals/AddNewTaskModal.vue';
+
 export default {
+  components: {
+    // AddNewTaskModal,
+  },
   data() {
     return {
-      tasks: [
-        'do dishes',
-        'do laundry',
-        'clean bathroom',
-      ],
+
+      tasks: JSON.parse(localStorage.getItem('tasks')) || [],
+      newTask: '',
     }
   },
   computed: {
 
   },
   methods:{
-
+      submitTask() {
+      if (this.newTask.trim()) {
+        this.tasks.push(this.newTask); 
+        this.newTask = '';
+        localStorage.setItem('tasks', JSON.stringify(this.tasks));
+      } else {
+        alert('Please enter a task');
+      }
+    },
   }
 }
 </script>
@@ -42,9 +53,15 @@ export default {
       </div>
 
       <div class="card-footer d-flex justify-content-end">
-        <button type="button" class="btn btn-lg btn-primary">
-          <i class="fa-solid fa-plus"></i>
-        </button>
+        <input
+            v-model="newTask"
+            type="text"
+            class="form-control"
+            id="newTask"
+            placeholder="New Task"
+          />
+          <label for="newTask">New Task</label>
+          <button type="button" class="btn btn-primary" @click="submitTask">add new </button>
       </div>
     </div>
   </div>
