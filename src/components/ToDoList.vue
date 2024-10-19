@@ -58,7 +58,11 @@ export default {
     editTask(index) {
       this.editIndex = index;
     },
-    handleTaskUpdate(updatedTask, index) {
+    handleTaskUpdate(updatedTaskName, index) {
+      const updatedTask = {
+      ...this.tasks[index],
+      name: updatedTaskName, 
+      };
       this.tasks.splice(index, 1, updatedTask);
       localStorage.setItem('tasks', JSON.stringify(this.tasks)); 
       this.editIndex = null; 
@@ -84,8 +88,6 @@ export default {
       <div class="card m-4">
         <div class="card-header pb-0">
           <h1 class="my-4">TO DO LIST</h1>
-
-          <!-- Tabs for All, Pending, Done -->
           <ul class="nav nav-tabs">
             <li class="nav-item">
               <a class="nav-link" :class="{ active: currentTab === 'all' }" @click="currentTab = 'all'">
@@ -161,12 +163,12 @@ export default {
     overflow-y: auto;
     height: 60vh; 
   }
- .round-btn{
-  border-radius: 50%;
- }
- .card {
-  max-height: 90vh;
- }
+  .round-btn{
+    border-radius: 50%;
+  }
+  .card {
+    max-height: 90vh;
+  }
  .text-decoration-line-through {
     text-decoration: line-through;
   }

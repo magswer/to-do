@@ -1,5 +1,5 @@
 <template>
-  <div class="app w-sm-100 w-md-75 w-lg-75 w-xxl-50">
+  <div class="app">
     <ToDoList/>
     <EditTaskModal v-if="isModalVisible" @close="closeModal" />
   </div>

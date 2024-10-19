@@ -12,7 +12,7 @@ export default {
   },
   data() {
     return {
-      taskValue: this.task,
+      taskValue: this.task.name,
     };
   },
   methods: {
