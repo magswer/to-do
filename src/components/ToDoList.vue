@@ -109,7 +109,7 @@ export default {
         </div>
         <div class="card-body">
           <div v-if="noTasks">You have no tasks</div>
-          <div v-else class="d-flex justify-content-between align-items-center mb-3" v-for="(task, index) in filteredTasks" :key="index">
+          <div v-else class="d-flex justify-content-between align-items-center mb-3" v-for="(task, index) in filteredTasks" :key="task.name + index">
             <div class="d-flex align-items-center">
               <input class="form-check-input mt-0 me-3" 
               type="checkbox"
@@ -136,7 +136,7 @@ export default {
           @close-modal="editIndex = null"
         />
 
-        <div class="card-footer py-5 d-flex align-items-end" :class="isMobile? 'row justify-content-end' : 'justify-content-between'">
+        <div class="card-footer py-3 d-flex align-items-end" :class="isMobile? 'row justify-content-end' : 'justify-content-between'">
           <div class="w-100" >
             <label for="new-task" id="new-task-label" class="h4 pb-1">Add new task</label>
             <input
