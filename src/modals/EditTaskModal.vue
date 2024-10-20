@@ -39,8 +39,8 @@ export default {
           <input v-model="taskValue" class="form-control" />
         </div>
         <div class="p-3 d-flex justify-content-end">
-          <button type="button" class="btn btn-secondary me-2" @click="closeModal">Cancel</button>
-          <button type="button" class="btn btn-dark " @click="saveTask">Save</button>
+          <button type="button" class="btn btn-secondary me-2 text-button" @click="closeModal">Cancel</button>
+          <button type="button" class="btn btn-dark text-button" @click="saveTask">Save</button>
         </div>
       </div>
     </div>
@@ -49,6 +49,10 @@ export default {
 
 <style scoped>
 .modal-dialog {
-  max-width: 400px;
+  max-width: 25rem;
+}
+.text-button{
+  font-size: smaller;
+  font-weight: 200;
 }
 </style>

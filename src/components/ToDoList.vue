@@ -115,7 +115,7 @@ export default {
               type="checkbox"
               v-model="task.done"
               @change="updateLocalStorage">
-              <label :class="{ 'text-decoration-line-through': task.done }" class="form-check-label me-5">
+              <label :class="{ 'task-done': task.done }" class="form-check-label me-5">
                 {{ task.name }}
               </label>            </div>
             <div class="d-flex">
@@ -138,7 +138,7 @@ export default {
 
         <div class="card-footer py-3 d-flex align-items-end" :class="isMobile? 'row justify-content-end' : 'justify-content-between'">
           <div class="w-100" >
-            <label for="new-task" id="new-task-label" class="h4 pb-1">Add new task</label>
+            <label for="new-task" id="new-task-label" class="h5 pb-1">Add new task</label>
             <input
                 v-model="newTask"
                 type="text"
@@ -148,7 +148,7 @@ export default {
               />
           </div>
           <div :class="isMobile ? 'd-flex justify-content-end mt-3' : 'ms-3'">
-            <button type="button" class="btn btn-dark  px-4" @click="submitTask">Save</button>
+            <button type="button" class="btn btn-dark px-4 text-button" @click="submitTask">Save</button>
           </div>
         </div>
       </div>
@@ -158,19 +158,32 @@ export default {
 
 <style scoped>
   .card-body{
-    font-weight: 600;
-    font-size: large;
+    font-weight: 300;
     overflow-y: auto;
     height: 60vh; 
   }
   .round-btn{
     border-radius: 50%;
+    transition: all .8s ease;
   }
   .card {
     max-height: 90vh;
   }
- .text-decoration-line-through {
+ .task-done{
     text-decoration: line-through;
+    color:#888;
   }
-
+  .form-control{
+    font-size: smaller;
+    font-weight: 200;
+  }
+  .nav-item{
+    cursor: pointer; 
+    font-size: smaller;
+    font-weight: 200;
+  }
+  .text-button{
+    font-size: smaller;
+    font-weight: 200;
+  }
 </style>
