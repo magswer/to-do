@@ -109,7 +109,7 @@ export default {
         </div>
         <div class="card-body">
           <div v-if="noTasks">You have no tasks</div>
-          <div v-else class="d-flex justify-content-between align-items-center mb-3" v-for="(task, index) in filteredTasks" :key="task.name + index">
+          <div class="d-flex justify-content-between align-items-center mb-3" v-for="(task, index) in filteredTasks" :key="task.name + index">
             <div class="d-flex align-items-center">
               <input class="form-check-input mt-0 me-3" 
               type="checkbox"
@@ -117,7 +117,8 @@ export default {
               @change="updateLocalStorage">
               <label :class="{ 'task-done': task.done }" class="form-check-label me-5">
                 {{ task.name }}
-              </label>            </div>
+              </label>    
+            </div>        
             <div class="d-flex">
               <button type="button" class="btn btn-sm btn-outline-dark round-btn mx-2" @click="editTask(index)">
                 <i class="fa-solid fa-pencil"></i>
@@ -173,17 +174,23 @@ export default {
     text-decoration: line-through;
     color:#888;
   }
-  .form-control{
+  .text-button, .form-control{
     font-size: smaller;
     font-weight: 200;
   }
-  .nav-item{
-    cursor: pointer; 
-    font-size: smaller;
-    font-weight: 200;
-  }
-  .text-button{
-    font-size: smaller;
-    font-weight: 200;
-  }
+  .nav-link {
+  color: #444;
+  padding: 8px 12px;
+  text-decoration: none;
+  transition: color 0.5s ease;
+  font-size: smaller;
+  font-weight: 300;
+  cursor: pointer; 
+}
+.active {  
+  font-weight: 500;
+}
+.nav-link:hover {
+  color:black; 
+}
 </style>
