@@ -2,11 +2,9 @@
 export default {
   props: {
     task: {
-      type: String,
       required: true
     },
-    index: {
-      type: Number,
+    id: {
       required: true
     }
   },
@@ -17,7 +15,7 @@ export default {
   },
   methods: {
     saveTask() {
-      this.$emit('update-task', this.taskValue, this.index);
+      this.$emit('update-task', this.taskValue, this.id);
     },
     closeModal() {
       this.$emit('close-modal');
@@ -26,8 +24,9 @@ export default {
 };
 </script>
 
+
 <template>
- <div class="modal fade show d-block" tabindex="-1" role="dialog" style="background-color: rgba(0, 0, 0, 0.5);">
+  <div class="modal fade show d-block" tabindex="-1" role="dialog" style="background-color: rgba(0, 0, 0, 0.5);">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-body d-flex justify-content-between">
@@ -47,11 +46,13 @@ export default {
   </div>
 </template>
 
+
 <style scoped>
 .modal-dialog {
   max-width: 25rem;
 }
-.text-button{
+
+.text-button {
   font-size: smaller;
   font-weight: 200;
 }

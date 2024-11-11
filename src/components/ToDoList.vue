@@ -1,30 +1,32 @@
 <script>
 import EditTaskModal from '../modals/EditTaskModal.vue';
 
+
 export default {
   components: {
- EditTaskModal
+    EditTaskModal
   },
   data() {
     return {
 
+
       tasks: JSON.parse(localStorage.getItem('tasks')) || [],
       newTask: '',
-      editIndex: null,
+      editId: null,
       editTaskValue: '',
       windowWidth: window.innerWidth,
-      currentTab: 'all', 
+      currentTab: 'all',
     }
   },
   computed: {
     noTasks() {
-      return this.tasks.length === 0; 
+      return this.tasks.length === 0;
     },
     isMobile() {
       return this.windowWidth <= 768;
     },
-     // Filtered tasks based on the current tab
-     filteredTasks() {
+    // Filtered tasks based on the current tab
+    filteredTasks() {
       if (this.currentTab === 'pending') {
         return this.pendingTasks;
       } else if (this.currentTab === 'done') {
@@ -39,36 +41,45 @@ export default {
     // Completed tasks
     doneTasks() {
       return this.tasks.filter(task => task.done);
+    },
+    taskIndex() {
+      return this.tasks.findIndex(task => task.id === this.editId);
     }
   },
-  methods:{
+  methods: {
     submitTask() {
       if (this.newTask.trim()) {
-        this.tasks.push({ name: this.newTask, done: false });
+        this.tasks.push({ name: this.newTask, id: +new Date, done: false });
+        console.log(this.tasks);
         this.newTask = '';
         localStorage.setItem('tasks', JSON.stringify(this.tasks));
       } else {
         alert('Please enter a task');
       }
     },
-    deleteTask(index){
-      this.tasks.splice(index, 1);
-      localStorage.setItem('tasks', JSON.stringify(this.tasks));
+    deleteTask(id) {
+      const taskIndex = this.tasks.findIndex(task => task.id === id);
+      if (taskIndex !== -1) {
+        this.tasks.splice(taskIndex, 1);
+        this.updateLocalStorage();
+      }
     },
-    editTask(index) {
-      this.editIndex = index;
+    editTask(id) {
+      this.editId = id;
     },
-    handleTaskUpdate(updatedTaskName, index) {
+    handleTaskUpdate(updatedTaskName, id) {
+      const editingTaskIndex = this.tasks.findIndex(task => task.id === id);
       const updatedTask = {
-      ...this.tasks[index],
-      name: updatedTaskName, 
+        ...this.tasks[editingTaskIndex],
+        name: updatedTaskName,
       };
-      this.tasks.splice(index, 1, updatedTask);
-      localStorage.setItem('tasks', JSON.stringify(this.tasks)); 
-      this.editIndex = null; 
+      console.log(updatedTask);
+      this.tasks.splice(editingTaskIndex, 1, updatedTask);
+      this.updateLocalStorage();
+      this.editId = null;
     },
     cancelEdit() {
-      this.editIndex = null;
+      this.editId = null;
     },
     updateLocalStorage() {
       localStorage.setItem('tasks', JSON.stringify(this.tasks));
@@ -82,9 +93,10 @@ export default {
 }
 </script>
 
+
 <template>
   <div class="d-flex justify-content-center">
-    <div :class="isMobile ? 'w-100' : 'w-50'"> 
+    <div :class="isMobile ? 'w-100' : 'w-50'">
       <div class="card m-4">
         <div class="card-header pb-0">
           <h1 class="my-4">TO DO LIST</h1>
@@ -105,48 +117,39 @@ export default {
               </a>
             </li>
           </ul>
-      
+
         </div>
         <div class="card-body">
           <div v-if="noTasks">You have no tasks</div>
-          <div class="d-flex justify-content-between align-items-center mb-3" v-for="(task, index) in filteredTasks" :key="task.name + index">
+          <div class="d-flex justify-content-between align-items-center mb-3" v-for="(task) in filteredTasks"
+            :key="task.name + task.id">
             <div class="d-flex align-items-center">
-              <input class="form-check-input mt-0 me-3" 
-              type="checkbox"
-              v-model="task.done"
-              @change="updateLocalStorage">
+              <input class="form-check-input mt-0 me-3" type="checkbox" v-model="task.done"
+                @change="updateLocalStorage">
               <label :class="{ 'task-done': task.done }" class="form-check-label me-5">
                 {{ task.name }}
-              </label>    
-            </div>        
+              </label>
+            </div>
             <div class="d-flex">
-              <button type="button" class="btn btn-sm btn-outline-dark round-btn mx-2" @click="editTask(index)">
+              <button type="button" class="btn btn-sm btn-outline-dark round-btn mx-2" @click="editTask(task.id)">
                 <i class="fa-solid fa-pencil"></i>
               </button>
-              <button type="button" class="btn btn-sm btn-outline-dark round-btn" @click="deleteTask(index)">
+              <button type="button" class="btn btn-sm btn-outline-dark round-btn" @click="deleteTask(task.id)">
                 <i class="fa-solid fa-trash"></i>
               </button>
             </div>
           </div>
         </div>
-        <EditTaskModal
-          v-if="editIndex !== null"
-          :task="tasks[editIndex]"
-          :index="editIndex"
-          @update-task="handleTaskUpdate"
-          @close-modal="editIndex = null"
-        />
+        <EditTaskModal v-if="editId !== null" :task="tasks[taskIndex]" :id="editId" @update-task="handleTaskUpdate"
+          @close-modal="editId = null" />
 
-        <div class="card-footer py-3 d-flex align-items-end" :class="isMobile? 'row justify-content-end' : 'justify-content-between'">
-          <div class="w-100" >
+
+        <div class="card-footer py-3 d-flex align-items-end"
+          :class="isMobile ? 'row justify-content-end' : 'justify-content-between'">
+          <div class="w-100">
             <label for="new-task" id="new-task-label" class="h5 pb-1">Add new task</label>
-            <input
-                v-model="newTask"
-                type="text"
-                class="form-control m-0 px-2"
-                placeholder="add new task here"
-                @keyup.enter="submitTask"
-              />
+            <input v-model="newTask" type="text" class="form-control m-0 px-2" placeholder="add new task here"
+              @keyup.enter="submitTask" />
           </div>
           <div :class="isMobile ? 'd-flex justify-content-end mt-3' : 'ms-3'">
             <button type="button" class="btn btn-dark px-4 text-button" @click="submitTask">Save</button>
@@ -157,40 +160,49 @@ export default {
   </div>
 </template>
 
+
 <style scoped>
-  .card-body{
-    font-weight: 300;
-    overflow-y: auto;
-    height: 60vh; 
-  }
-  .round-btn{
-    border-radius: 50%;
-    transition: all .8s ease;
-  }
-  .card {
-    max-height: 90vh;
-  }
- .task-done{
-    text-decoration: line-through;
-    color:#888;
-  }
-  .text-button, .form-control{
-    font-size: smaller;
-    font-weight: 200;
-  }
-  .nav-link {
+.card-body {
+  font-weight: 300;
+  overflow-y: auto;
+  height: 60vh;
+}
+
+.round-btn {
+  border-radius: 50%;
+  transition: all .8s ease;
+}
+
+.card {
+  max-height: 90vh;
+}
+
+.task-done {
+  text-decoration: line-through;
+  color: #888;
+}
+
+.text-button,
+.form-control {
+  font-size: smaller;
+  font-weight: 200;
+}
+
+.nav-link {
   color: #444;
   padding: 8px 12px;
   text-decoration: none;
   transition: color 0.5s ease;
   font-size: smaller;
   font-weight: 300;
-  cursor: pointer; 
+  cursor: pointer;
 }
-.active {  
+
+.active {
   font-weight: 500;
 }
+
 .nav-link:hover {
-  color:black; 
+  color: black;
 }
 </style>
