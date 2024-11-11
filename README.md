@@ -2,6 +2,9 @@
 
 A simple and elegant To-Do List application built with Vue.js, Bootstrap, and local storage. This application allows users to manage their tasks efficiently through basic CRUD operations: Create, Read, Update, and Delete.
 
+<img width="404" alt="to do list" src="https://github.com/user-attachments/assets/bf18280a-ca04-47ca-8908-7d9c953b48e3">
+
+
 ## Features
 
 - **Add Tasks**: Users can add new tasks to their to-do list.
