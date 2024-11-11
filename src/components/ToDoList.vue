@@ -25,26 +25,20 @@ export default {
     isMobile() {
       return this.windowWidth <= 768;
     },
-    // Filtered tasks based on the current tab
     filteredTasks() {
       if (this.currentTab === 'pending') {
         return this.pendingTasks;
-      } else if (this.currentTab === 'done') {
+      }else if (this.currentTab === 'done') {
         return this.doneTasks;
       }
       return this.tasks;
     },
-    // Pending tasks
     pendingTasks() {
       return this.tasks.filter(task => !task.done);
     },
-    // Completed tasks
     doneTasks() {
       return this.tasks.filter(task => task.done);
     },
-    taskIndex() {
-      return this.tasks.findIndex(task => task.id === this.editId);
-    }
   },
   methods: {
     submitTask() {
@@ -57,26 +51,33 @@ export default {
         alert('Please enter a task');
       }
     },
+    getTaskIndexById(id) {
+      return this.tasks.findIndex(task => task.id === id);
+    },
+
     deleteTask(id) {
-      const taskIndex = this.tasks.findIndex(task => task.id === id);
+      const taskIndex = this.getTaskIndexById(id);
       if (taskIndex !== -1) {
         this.tasks.splice(taskIndex, 1);
         this.updateLocalStorage();
       }
     },
+
     editTask(id) {
       this.editId = id;
     },
+
     handleTaskUpdate(updatedTaskName, id) {
-      const editingTaskIndex = this.tasks.findIndex(task => task.id === id);
-      const updatedTask = {
-        ...this.tasks[editingTaskIndex],
-        name: updatedTaskName,
-      };
-      console.log(updatedTask);
-      this.tasks.splice(editingTaskIndex, 1, updatedTask);
-      this.updateLocalStorage();
-      this.editId = null;
+      const taskIndex = this.getTaskIndexById(id);
+      if (taskIndex !== -1) {
+        const updatedTask = {
+          ...this.tasks[taskIndex],
+          name: updatedTaskName,
+        };
+        this.tasks.splice(taskIndex, 1, updatedTask);
+        this.updateLocalStorage();
+        this.editId = null;
+      }
     },
     cancelEdit() {
       this.editId = null;
@@ -140,10 +141,13 @@ export default {
             </div>
           </div>
         </div>
-        <EditTaskModal v-if="editId !== null" :task="tasks[taskIndex]" :id="editId" @update-task="handleTaskUpdate"
-          @close-modal="editId = null" />
-
-
+        <EditTaskModal 
+        v-if="editId !== null"  
+        :task="tasks[getTaskIndexById(editId)]" 
+        :id="editId" 
+        @update-task="handleTaskUpdate"
+        @close-modal="editId = null" />
+        
         <div class="card-footer py-3 d-flex align-items-end"
           :class="isMobile ? 'row justify-content-end' : 'justify-content-between'">
           <div class="w-100">
